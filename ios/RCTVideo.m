@@ -270,6 +270,13 @@ static NSString *const timedMetadata = @"timedMetadata";
     [_playerItem removeObserver:self forKeyPath:timedMetadata];
     _playerItemObserversSet = NO;
   }
+
+  [self releaseTap];
+}
+
+-(void)releaseTap {
+  AVMutableAudioMixInputParameters *params = (AVMutableAudioMixInputParameters *) _playerItem.audioMix.inputParameters[0];
+  params.audioTapProcessor = nil;
   _playerItem.audioMix = nil;
   tapProcessor.delegate = nil;
   tapProcessor = nil;

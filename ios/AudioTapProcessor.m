@@ -73,7 +73,7 @@ static OSStatus AU_RenderCallback(void *inRefCon, AudioUnitRenderActionFlags *io
 				MTAudioProcessingTapCallbacks callbacks;
 				
 				callbacks.version       = kMTAudioProcessingTapCallbacksVersion_0;
-				callbacks.clientInfo    = (__bridge void *)self,
+				callbacks.clientInfo    = CFRetain((__bridge void *)self),
 				callbacks.init          = tap_InitCallback;
 				callbacks.finalize      = tap_FinalizeCallback;
 				callbacks.prepare       = tap_PrepareCallback;
@@ -139,6 +139,7 @@ static void tap_FinalizeCallback(MTAudioProcessingTapRef tap)
 	AVAudioTapProcessorContext *context = (AVAudioTapProcessorContext *)MTAudioProcessingTapGetStorage(tap);
 	
 	// Clear MTAudioProcessingTap context.
+	CFRelease(context->self);
 	context->self = NULL;
 	
 	free(context);
